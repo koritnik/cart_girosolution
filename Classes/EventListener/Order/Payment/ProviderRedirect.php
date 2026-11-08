@@ -20,6 +20,9 @@ use Extcode\Cart\Event\Order\PaymentEvent;
 use Extcode\CartGirosolution\Configuration\CredentialLoaderRegistry;
 use girosolution\GiroCheckout_SDK\GiroCheckout_SDK_Request;
 use InvalidArgumentException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Routing\RouterInterface;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
@@ -47,6 +50,7 @@ class ProviderRedirect
         private readonly SiteFinder $siteFinder,
         private readonly CartRepository $cartRepository,
         private readonly PaymentRepository $paymentRepository,
+        private readonly ExtensionConfiguration $extensionConfiguration,
         readonly CredentialLoaderRegistry $credentialLoaderRegistry
     ) {
         $this->credentials = $this->credentialLoaderRegistry->getCredentials();
@@ -86,6 +90,11 @@ class ProviderRedirect
         $paymentConf = $this->getPaymentConfiguration($clearingType);
 
         $cart = $this->persistCartToDatabase($event);
+
+        $server = $this->getServer();
+        if ($server !== '') {
+            $request->setServer($server);
+        }
 
         $request->setSecret($paymentConf['password']);
         $request->addParam('merchantId', $paymentConf['merchantId'])
@@ -145,6 +154,19 @@ class ProviderRedirect
             'PAYPAL' => new GiroCheckout_SDK_Request('paypalTransaction'),
             default => throw new InvalidArgumentException('Invalid Clearint Type', 1734099627),
         };
+    }
+
+    /**
+     * Server alias (e.g. gc2-prod, gc2-preprod, gc1-prod) or base URL of the GiroCheckout API.
+     * An empty value keeps the default of the SDK.
+     */
+    private function getServer(): string
+    {
+        try {
+            return trim((string)$this->extensionConfiguration->get('cart_girosolution', 'server'));
+        } catch (ExtensionConfigurationExtensionNotConfiguredException|ExtensionConfigurationPathDoesNotExistException) {
+            return '';
+        }
     }
 
     private function getPaymentConfiguration(string $clearingType): array
