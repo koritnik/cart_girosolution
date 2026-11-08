@@ -48,21 +48,21 @@ class PaymentController extends ActionController
         private readonly CartRepository $cartRepository,
         private readonly OrderItemRepository $orderItemRepository,
         private readonly PaymentRepository $paymentRepository,
-        readonly CredentialLoaderRegistry $credentialLoaderRegistry,
+        public readonly CredentialLoaderRegistry $credentialLoaderRegistry,
     ) {}
 
     protected function initializeAction(): void
     {
         $this->credentials = $this->credentialLoaderRegistry->getCredentials();
 
-        $this->cartPluginSettings =
-            $this->configurationManager->getConfiguration(
+        $this->cartPluginSettings
+            = $this->configurationManager->getConfiguration(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
                 'Cart'
             );
 
-        $this->pluginSettings =
-            $this->configurationManager->getConfiguration(
+        $this->pluginSettings
+            = $this->configurationManager->getConfiguration(
                 ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK,
                 'CartGirosolution'
             );
@@ -115,7 +115,7 @@ class PaymentController extends ActionController
         );
     }
 
-    public function notifyAction(): void
+    public function notifyAction(): ResponseInterface
     {
         $this->cart = $this->loadCartByArgumentHash();
 
@@ -143,7 +143,7 @@ class PaymentController extends ActionController
             }
         }
 
-        $notify->sendOkStatus();
+        return $this->responseFactory->createResponse(200);
     }
 
     private function updatePaymentAndTransaction($notify, Item $orderItem, string $status): bool
@@ -152,12 +152,14 @@ class PaymentController extends ActionController
 
         $payment = $orderItem->getPayment();
 
-        foreach ($payment->getTransactions() as $transaction) {
-            if ($transaction->getTxnId() === ($notify->getResponseParam('gcReference'))) {
+        $transaction = null;
+        foreach ($payment->getTransactions() as $paymentTransaction) {
+            if ($paymentTransaction->getTxnId() === $notify->getResponseParam('gcReference')) {
+                $transaction = $paymentTransaction;
                 break;
             }
         }
-        if (!isset($transaction) || !$transaction instanceof Transaction) {
+        if (!$transaction instanceof Transaction) {
             throw new Exception('No transation found!', 1731616906);
         }
 
