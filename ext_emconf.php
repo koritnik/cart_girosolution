@@ -8,11 +8,12 @@ $EM_CONF['cart_girosolution'] = [
     'author_email' => 'ext@extco.de',
     'author_company' => 'extco.de UG (haftungsbeschränkt)',
     'state' => 'stable',
-    'version' => '6.0.0',
+    'version' => '6.0.0-dev',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.0-13.4.99',
-            'cart' => '10.0.0',
+            'php' => '8.2.0-8.5.99',
+            'typo3' => '14.3.0-14.99.99',
+            'cart' => '12.0.0-12.99.99',
         ],
         'conflicts' => [],
         'suggests' => [],
