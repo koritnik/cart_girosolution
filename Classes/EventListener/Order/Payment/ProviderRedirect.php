@@ -80,7 +80,8 @@ class ProviderRedirect
 
         $payment = $this->orderItem->getPayment();
         $provider = $payment->getProvider();
-        [$provider, $clearingType] = explode('_', (string)$provider);
+        // Payment methods of other providers (e.g. prepayment) have no or another provider
+        [$provider, $clearingType] = array_pad(explode('_', (string)$provider), 2, '');
 
         if ($provider !== 'GIROSOLUTION') {
             return;
