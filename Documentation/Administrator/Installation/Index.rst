@@ -19,7 +19,18 @@ Installation from TYPO3 Extension Repository (TER)
 
 The extension can only be installed via composer. Installation via the TER is not possible.
 
-Preparation: Include static TypoScript
+Preparation: Add the site set
+-----------------------------
+
+The extension ships a site set **Shopping Cart - Girosolution** (`extcode/cart-girosolution`). Add it as a
+dependency of your site configuration or of the site set of your site package.
+
+.. code-block:: yaml
+
+   dependencies:
+     - extcode/cart-girosolution
+
+Alternative: Include static TypoScript
 --------------------------------------
 
 The extension ships some TypoScript code which needs to be included.
