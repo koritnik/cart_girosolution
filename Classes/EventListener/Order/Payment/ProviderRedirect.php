@@ -106,29 +106,7 @@ class ProviderRedirect
             ->addParam('urlRedirect', $this->buildReturnUrl('redirect', $cart->getSHash()))
             ->addParam('urlNotify', $this->buildReturnUrl('notify', $cart->getSHash()));
 
-        if ($clearingType === 'PAYDIREKT') {
-            $request->addParam('orderId', $this->orderItem->getOrderNumber());
-
-            if ($this->orderItem->getShippingAddress()) {
-                $request->addParam('shippingAddresseFirstName', $this->orderItem->getShippingAddress()->getFirstName());
-                $request->addParam('shippingAddresseLastName', $this->orderItem->getShippingAddress()->getLastName());
-                $request->addParam('shippingZipCode', $this->orderItem->getShippingAddress()->getZip());
-                $request->addParam('shippingCity', $this->orderItem->getShippingAddress()->getCity());
-                $request->addParam('shippingCountry', $this->orderItem->getShippingAddress()->getCountry());
-                if ($this->orderItem->getShippingAddress()->getEmail()) {
-                    $request->addParam('shippingEmail', $this->orderItem->getShippingAddress()->getEmail());
-                } else {
-                    $request->addParam('shippingEmail', $this->orderItem->getBillingAddress()->getEmail());
-                }
-            } else {
-                $request->addParam('shippingAddresseFirstName', $this->orderItem->getBillingAddress()->getFirstName());
-                $request->addParam('shippingAddresseLastName', $this->orderItem->getBillingAddress()->getLastName());
-                $request->addParam('shippingZipCode', $this->orderItem->getBillingAddress()->getZip());
-                $request->addParam('shippingCity', $this->orderItem->getBillingAddress()->getCity());
-                $request->addParam('shippingCountry', $this->orderItem->getBillingAddress()->getCountry());
-                $request->addParam('shippingEmail', $this->orderItem->getBillingAddress()->getEmail());
-            }
-        } elseif ($clearingType === 'PAYPAL') {
+        if ($clearingType === 'PAYPAL') {
             $request->addParam('type', 'SALE');
         }
 
@@ -164,9 +142,7 @@ class ProviderRedirect
     {
         return match ($clearingType) {
             'CREDITCARD' => new GiroCheckout_SDK_Request('creditCardTransaction'),
-            'GIROPAY' => new GiroCheckout_SDK_Request('giropayTransaction'),
             'PAYPAL' => new GiroCheckout_SDK_Request('paypalTransaction'),
-            'PAYDIREKT' => new GiroCheckout_SDK_Request('paydirektTransaction'),
             default => throw new InvalidArgumentException('Invalid Clearint Type', 1734099627),
         };
     }
@@ -175,9 +151,7 @@ class ProviderRedirect
     {
         return match ($clearingType) {
             'CREDITCARD' => $this->credentials['creditCard'],
-            'GIROPAY' => $this->credentials['giropay'],
             'PAYPAL' => $this->credentials['paypal'],
-            'PAYDIREKT' => $this->credentials['paydirekt'],
             default => throw new InvalidArgumentException('Invalid Clearint Type', 1734099627),
         };
     }

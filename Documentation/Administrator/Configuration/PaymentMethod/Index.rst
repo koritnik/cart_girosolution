@@ -23,24 +23,6 @@ from Cart available.
                        available.from = 0.01
                    }
                    3 {
-                       provider = GIROSOLUTION_GIROPAY
-                       processOrderCreateEvent = Extcode\CartGirosolution\Event\ProcessOrderCreateEvent
-                       title = Girosolution - giropay
-                       extra = 0.00
-                       taxClassId = 1
-                       status = open
-                       available.from = 0.01
-                   }
-                   4 {
-                       provider = GIROSOLUTION_PAYDIREKT
-                       processOrderCreateEvent = Extcode\CartGirosolution\Event\ProcessOrderCreateEvent
-                       title = Girosolution - paydirekt
-                       extra = 0.00
-                       taxClassId = 1
-                       status = open
-                       available.from = 0.01
-                   }
-                   5 {
                        provider = GIROSOLUTION_PAYPAL
                        processOrderCreateEvent = Extcode\CartGirosolution\Event\ProcessOrderCreateEvent
                        title = Girosolution - paypal
@@ -69,8 +51,6 @@ from Cart available.
       Possible providers are:
 
       * GIROSOLUTION_CREDITCARD: Credit card
-      * GIROSOLUTION_GIROPAY: giropay
-      * GIROSOLUTION_PAYDIREKT: paydirekt
       * GIROSOLUTION_PAYPAL: PayPal
 
 .. container:: table-row
@@ -82,27 +62,6 @@ from Cart available.
    Description
       Defines that the event class name for payment provider which will triggered in `Order::createAction()`.
       This information is mandatory.
-
-.. IMPORTANT::
-
-   **giropay** can **only** be used with the currency **EURO**.
-
-.. IMPORTANT::
-
-   **paydirekt** requires some data for the shipping address.
-
-   * First name
-   * Last name
-   * ZIP
-   * City
-   * Country
-   * Email
-
-   The billing address data will be used for this purpose as long as no shipping address has been specified. For the optional shipping address, the same fields are mandatory except for the e-mail. The e-mail address is alternatively taken from the billing address.
-
-   Since it is currently technically not possible to specify further conditions and validations for this payment method, it must be ensured during integration that these fields are generally mandatory if paydirekt is to be offered.
-
-   The method also offers an age validation. This is currently not implemented.
 
 .. NOTE::
 

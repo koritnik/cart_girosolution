@@ -22,18 +22,6 @@ These must be adopted accordingly for the payment methods that are to be offered
                projectId =
            }
 
-           giropay {
-               password =
-               merchantId =
-               projectId =
-           }
-
-           paydirekt {
-               password =
-               merchantId =
-               projectId =
-           }
-
            paypal {
                password =
                merchantId =
@@ -55,8 +43,6 @@ These must be adopted accordingly for the payment methods that are to be offered
       These must be adopted accordingly for the payment methods that are to be offered in the shop.
 
       * creditCard
-      * giropay
-      * paydirekt
       * paypal
 
 .. container:: table-row

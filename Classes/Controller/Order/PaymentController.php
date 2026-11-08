@@ -240,9 +240,7 @@ class PaymentController extends ActionController
     {
         return match ($clearingType) {
             'CREDITCARD' => new GiroCheckout_SDK_Notify('creditCardTransaction'),
-            'GIROPAY' => new GiroCheckout_SDK_Notify('giropayTransaction'),
             'PAYPAL' => new GiroCheckout_SDK_Notify('paypalTransaction'),
-            'PAYDIREKT' => new GiroCheckout_SDK_Notify('paydirektTransaction'),
             default => throw new InvalidArgumentException('Invalid Clearint Type', 1734099627),
         };
     }
@@ -251,9 +249,7 @@ class PaymentController extends ActionController
     {
         return match ($clearingType) {
             'CREDITCARD' => $this->credentials['creditCard'],
-            'GIROPAY' => $this->credentials['giropay'],
             'PAYPAL' => $this->credentials['paypal'],
-            'PAYDIREKT' => $this->credentials['paydirekt'],
             default => throw new InvalidArgumentException('Invalid Clearint Type', 1734099627),
         };
     }
